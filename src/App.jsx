@@ -4,10 +4,14 @@ import DashboardTabs from './components/DashboardTabs';
 import BranchSelector from './components/BranchSelector';
 import AttendanceTracker from './components/AttendanceTracker';
 import ResultsOverview from './components/ResultsOverview';
+import ResultsLookupModal from './components/ResultsLookupModal';
+import TimetableWizard from './components/TimetableWizard';
 import Footer from './components/Footer';
 
 export default function App() {
   const [dashboard, setDashboard] = useState('student'); // 'student' | 'teacher'
+  const [resultsOpen, setResultsOpen] = useState(false);
+  const [timetableOpen, setTimetableOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 font-inter">
@@ -15,13 +19,20 @@ export default function App() {
 
       <main>
         <Hero dashboard={dashboard} />
-        <DashboardTabs dashboard={dashboard} />
+        <DashboardTabs
+          dashboard={dashboard}
+          onOpenResults={() => setResultsOpen(true)}
+          onOpenTimetable={() => setTimetableOpen(true)}
+        />
         <BranchSelector dashboard={dashboard} />
         <AttendanceTracker dashboard={dashboard} />
         <ResultsOverview dashboard={dashboard} />
       </main>
 
       <Footer />
+
+      <ResultsLookupModal open={resultsOpen} onClose={() => setResultsOpen(false)} />
+      <TimetableWizard open={timetableOpen} onClose={() => setTimetableOpen(false)} />
     </div>
   );
 }
@@ -46,7 +57,7 @@ function Hero({ dashboard }) {
                 : 'Learn, track, and collaborate — everything you need.'}
             </h2>
             <p className="mt-2 text-slate-600 max-w-2xl">
-              Switch between student and teacher views, and explore branches like CSE, IT, AIDS, AIML, ECE, EEE, Mechanical, and Civil with sections A through G.
+              Switch between student and teacher views. Use Results to search by roll number and Timetable to select a branch then section (A–G).
             </p>
             <div className="mt-4 flex items-center gap-2">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm">
