@@ -1,18 +1,18 @@
-import { BookOpen, Calendar, Settings, GraduationCap, FileSearch, UploadCloud } from 'lucide-react';
+import { Bell, Calendar, Settings, FileSearch, UploadCloud } from 'lucide-react';
 
-export default function DashboardTabs({ dashboard, onOpenResults, onOpenTimetable }) {
+export default function DashboardTabs({ dashboard, onOpenResults, onOpenTimetable, onOpenEvents, onOpenSettings }) {
   const studentCards = [
-    { key: 'courses', title: 'Courses', desc: 'View enrolled courses and materials.', icon: BookOpen, color: 'bg-indigo-50 text-indigo-700 border-indigo-100' },
+    { key: 'events', title: 'Event Alerts', desc: 'View uploaded events and deadlines.', icon: Bell, color: 'bg-indigo-50 text-indigo-700 border-indigo-100', onClick: onOpenEvents },
     { key: 'results', title: 'Results', desc: 'Check results by entering roll number.', icon: FileSearch, color: 'bg-emerald-50 text-emerald-700 border-emerald-100', onClick: onOpenResults },
     { key: 'timetable', title: 'Timetable', desc: 'View timetable by branch and section.', icon: Calendar, color: 'bg-amber-50 text-amber-700 border-amber-100', onClick: onOpenTimetable },
-    { key: 'settings', title: 'Settings', desc: 'Profile, preferences, and security.', icon: Settings, color: 'bg-slate-50 text-slate-700 border-slate-200' },
+    { key: 'settings', title: 'Settings', desc: 'Update your profile and password.', icon: Settings, color: 'bg-slate-50 text-slate-700 border-slate-200', onClick: onOpenSettings },
   ];
 
   const teacherCards = [
-    { key: 'classes', title: 'Classes', desc: 'Manage classes and resources.', icon: GraduationCap, color: 'bg-indigo-50 text-indigo-700 border-indigo-100' },
+    { key: 'events', title: 'Event Alerts', desc: 'Create/update events and deadlines.', icon: Bell, color: 'bg-indigo-50 text-indigo-700 border-indigo-100', onClick: onOpenEvents },
     { key: 'timetable', title: 'Timetable Management', desc: 'Upload or update timetables.', icon: UploadCloud, color: 'bg-amber-50 text-amber-700 border-amber-100', onClick: onOpenTimetable },
     { key: 'results', title: 'Results', desc: 'Enter or look up student results.', icon: FileSearch, color: 'bg-emerald-50 text-emerald-700 border-emerald-100', onClick: onOpenResults },
-    { key: 'settings', title: 'Settings', desc: 'Account and portal settings.', icon: Settings, color: 'bg-slate-50 text-slate-700 border-slate-200' },
+    { key: 'settings', title: 'Settings', desc: 'Set profile and change password.', icon: Settings, color: 'bg-slate-50 text-slate-700 border-slate-200', onClick: onOpenSettings },
   ];
 
   const cards = dashboard === 'teacher' ? teacherCards : studentCards;

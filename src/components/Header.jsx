@@ -1,6 +1,6 @@
-import { GraduationCap, Users } from 'lucide-react';
+import { GraduationCap, UserCircle2, LogOut } from 'lucide-react';
 
-export default function Header({ dashboard, onSwitch }) {
+export default function Header({ user, onLogout }) {
   return (
     <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-white/50 bg-white/70 border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -14,30 +14,23 @@ export default function Header({ dashboard, onSwitch }) {
           </div>
         </div>
 
-        <nav className="flex items-center gap-2">
-          <button
-            onClick={() => onSwitch('student')}
-            className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors border ${
-              dashboard === 'student'
-                ? 'bg-indigo-600 text-white border-indigo-600'
-                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-            }`}
-            aria-pressed={dashboard === 'student'}
-          >
-            <Users size={16} /> Student
-          </button>
-          <button
-            onClick={() => onSwitch('teacher')}
-            className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors border ${
-              dashboard === 'teacher'
-                ? 'bg-indigo-600 text-white border-indigo-600'
-                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-            }`}
-            aria-pressed={dashboard === 'teacher'}
-          >
-            <GraduationCap size={16} /> Teacher
-          </button>
-        </nav>
+        {user && (
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right">
+              <p className="text-sm font-medium text-slate-900">{user.name || (user.role === 'teacher' ? 'Faculty' : 'Student')}</p>
+              <p className="text-xs text-slate-500 capitalize">{user.role}</p>
+            </div>
+            <div className="h-9 w-9 rounded-full bg-indigo-50 grid place-items-center text-indigo-700 border border-indigo-100">
+              <UserCircle2 size={18} />
+            </div>
+            <button
+              onClick={onLogout}
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors border bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+            >
+              <LogOut size={16} /> Logout
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
