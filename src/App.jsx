@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import DashboardTabs from './components/DashboardTabs';
-import BranchSelector from './components/BranchSelector';
-import AttendanceTracker from './components/AttendanceTracker';
-import ResultsOverview from './components/ResultsOverview';
 import ResultsLookupModal from './components/ResultsLookupModal';
 import TimetableWizard from './components/TimetableWizard';
 import Footer from './components/Footer';
@@ -24,9 +21,7 @@ export default function App() {
           onOpenResults={() => setResultsOpen(true)}
           onOpenTimetable={() => setTimetableOpen(true)}
         />
-        <BranchSelector dashboard={dashboard} />
-        <AttendanceTracker dashboard={dashboard} />
-        <ResultsOverview dashboard={dashboard} />
+        {/* Removed: Branches/Sections browser, Attendance Tracker, and Results & Performance overview */}
       </main>
 
       <Footer />
@@ -57,7 +52,7 @@ function Hero({ dashboard }) {
                 : 'Learn, track, and collaborate — everything you need.'}
             </h2>
             <p className="mt-2 text-slate-600 max-w-2xl">
-              Switch between student and teacher views. Use Results to search by roll number and Timetable to select a branch then section (A–G).
+              Use Results to look up by roll number and Timetable to walk through branch → section selection.
             </p>
             <div className="mt-4 flex items-center gap-2">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm">
