@@ -24,7 +24,8 @@ export default function EventsPanel({ apiBase, user }) {
     }
   };
 
-  useEffect(() => { loadEvents(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { loadEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiBase]);
 
   const createEvent = async (e) => {
@@ -34,7 +35,7 @@ export default function EventsPanel({ apiBase, user }) {
       const payload = {
         title: form.title,
         description: form.description,
-        date: form.date, // ISO date string (yyyy-mm-dd)
+        date: form.date,
         location: form.location,
         created_by_role: user?.role,
       };

@@ -31,7 +31,8 @@ export default function AttendancePanel({ apiBase, user }) {
     }
   };
 
-  useEffect(() => { loadAll(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { loadAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiBase]);
 
   const markAttendance = async (e) => {

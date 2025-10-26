@@ -20,7 +20,6 @@ export default function App() {
   const apiBase = useMemo(() => {
     const env = import.meta.env.VITE_BACKEND_URL;
     if (env && typeof env === 'string' && env.trim().length > 0) return env.replace(/\/$/, '');
-    // Fallback: try same host:8000 if running locally or in sandbox
     try {
       const url = new URL(window.location.href);
       return `${url.protocol}//${url.hostname}:8000`;
@@ -30,8 +29,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // lightweight health check
-    fetch(`${apiBase}/test`).then(res => setBackendReachable(res.ok)).catch(() => setBackendReachable(false));
+    let cancelled = false;
+    fetch(`${apiBase}/test`).then(res => {
+      if (!cancelled) setBackendReachable(res.ok);
+    }).catch(() => {
+      if (!cancelled) setBackendReachable(false);
+    });
+    return () => { cancelled = true; };
   }, [apiBase]);
 
   const onLogout = () => {
