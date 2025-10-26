@@ -3,7 +3,6 @@ import Header from './components/Header';
 import DashboardTabs from './components/DashboardTabs';
 import ResultsLookupModal from './components/ResultsLookupModal';
 import TimetableWizard from './components/TimetableWizard';
-import Footer from './components/Footer';
 
 export default function App() {
   const [dashboard, setDashboard] = useState('student'); // 'student' | 'teacher'
@@ -21,13 +20,10 @@ export default function App() {
           onOpenResults={() => setResultsOpen(true)}
           onOpenTimetable={() => setTimetableOpen(true)}
         />
-        {/* Removed: Branches/Sections browser, Attendance Tracker, and Results & Performance overview */}
       </main>
 
-      <Footer />
-
-      <ResultsLookupModal open={resultsOpen} onClose={() => setResultsOpen(false)} />
-      <TimetableWizard open={timetableOpen} onClose={() => setTimetableOpen(false)} />
+      <ResultsLookupModal dashboard={dashboard} open={resultsOpen} onClose={() => setResultsOpen(false)} />
+      <TimetableWizard dashboard={dashboard} open={timetableOpen} onClose={() => setTimetableOpen(false)} />
     </div>
   );
 }
@@ -48,17 +44,16 @@ function Hero({ dashboard }) {
             <p className="text-xs tracking-wider uppercase text-indigo-700 font-semibold">{dashboard === 'teacher' ? 'Teacher Dashboard' : 'Student Dashboard'}</p>
             <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-900">
               {dashboard === 'teacher'
-                ? 'Teach, organize, and assess — all in one place.'
-                : 'Learn, track, and collaborate — everything you need.'}
+                ? 'Manage classes, upload timetables, and enter results.'
+                : 'Check results and view timetables effortlessly.'}
             </h2>
             <p className="mt-2 text-slate-600 max-w-2xl">
-              Use Results to look up by roll number and Timetable to walk through branch → section selection.
+              {dashboard === 'teacher'
+                ? 'Use Timetable Management to upload files after choosing branch and section. Enter or look up results from the Results panel.'
+                : 'Use Results to look up by roll number and Timetable to browse by branch and section.'}
             </p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm">
-                {dashboard === 'teacher' ? 'Start managing classes' : 'Start learning today'}
-              </span>
-              <span className="text-sm text-slate-600">No sign-in required for this demo</span>
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm">
+              {dashboard === 'teacher' ? 'Timetable & Results tools' : 'Results & Timetable access'}
             </div>
           </div>
         </div>
