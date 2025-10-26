@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Header from './components/Header';
 import DashboardTabs from './components/DashboardTabs';
 import BranchSelector from './components/BranchSelector';
+import AttendanceTracker from './components/AttendanceTracker';
+import ResultsOverview from './components/ResultsOverview';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -15,6 +17,8 @@ export default function App() {
         <Hero dashboard={dashboard} />
         <DashboardTabs dashboard={dashboard} />
         <BranchSelector dashboard={dashboard} />
+        <AttendanceTracker dashboard={dashboard} />
+        <ResultsOverview dashboard={dashboard} />
       </main>
 
       <Footer />
