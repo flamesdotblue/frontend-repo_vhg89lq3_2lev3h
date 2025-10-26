@@ -1,85 +1,90 @@
-import { useMemo, useState } from 'react';
-import Header from './components/Header';
-import DashboardTabs from './components/DashboardTabs';
-import ResultsLookupModal from './components/ResultsLookupModal';
-import TimetableWizard from './components/TimetableWizard';
-import EventsModal from './components/EventsModal';
-import SettingsModal from './components/SettingsModal';
-import Login from './components/Login';
+import React, { useMemo, useState } from 'react';
+import Header from './components/Header.jsx';
+import Login from './components/Login.jsx';
+import DashboardTabs from './components/DashboardTabs.jsx';
+import EventsModal from './components/EventsModal.jsx';
+import SettingsModal from './components/SettingsModal.jsx';
+import AttendanceModal from './components/AttendanceModal.jsx';
 
-export default function App() {
-  const [user, setUser] = useState(null); // { role: 'student' | 'teacher', email, name, mobile? }
-  const dashboard = user?.role || 'student';
+const App = () => {
+  const [user, setUser] = useState(null);
 
-  const [resultsOpen, setResultsOpen] = useState(false);
-  const [timetableOpen, setTimetableOpen] = useState(false);
+  // Modals
   const [eventsOpen, setEventsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [attendanceOpen, setAttendanceOpen] = useState(false);
+  const [resultsOpen, setResultsOpen] = useState(false);
+  const [timetableOpen, setTimetableOpen] = useState(false);
 
-  const heroCopy = useMemo(() => {
-    if (dashboard === 'teacher') {
-      return {
-        badge: 'Teacher Dashboard',
-        title: 'Manage classes, upload timetables, and enter results.',
-        desc: 'Use Timetable Management to upload files after choosing branch and section. Enter or look up results from the Results panel. Post event alerts with deadlines.',
-        cta: 'Timetable, Results & Events tools',
-      };
-    }
-    return {
-      badge: 'Student Dashboard',
-      title: 'Check results and view timetables effortlessly.',
-      desc: 'Use Results to look up by roll number, Timetable to browse by branch and section, and Event Alerts to stay updated.',
-      cta: 'Results, Timetable & Events',
-    };
-  }, [dashboard]);
+  // Demo data stores
+  const [events, setEvents] = useState([]);
+  const [attendanceMap, setAttendanceMap] = useState({}); // { ROLL: {presentDays, absentDays, percentage?} }
 
-  if (!user) {
-    return <Login onLogin={setUser} />;
-  }
+  const handleLogin = (u) => setUser(u);
+  const handleLogout = () => {
+    setUser(null);
+    setEvents([]);
+    setAttendanceMap({});
+  };
+
+  const welcome = useMemo(() => {
+    if (!user) return '';
+    return user.role === 'teacher' ? 'Teacher Dashboard' : 'Student Dashboard';
+  }, [user]);
+
+  if (!user) return <Login onLogin={handleLogin} />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 font-inter">
-      <Header user={user} onLogout={() => setUser(null)} />
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-indigo-50">
+      <Header user={user} onLogout={handleLogout} />
 
-      <main>
-        <Hero copy={heroCopy} />
+      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900">{welcome}</h2>
+          <p className="text-sm text-gray-500">Quick actions tailored to your role</p>
+        </div>
+
         <DashboardTabs
-          dashboard={dashboard}
+          role={user.role}
+          onOpenEvents={() => setEventsOpen(true)}
           onOpenResults={() => setResultsOpen(true)}
           onOpenTimetable={() => setTimetableOpen(true)}
-          onOpenEvents={() => setEventsOpen(true)}
           onOpenSettings={() => setSettingsOpen(true)}
+          onOpenAttendance={() => setAttendanceOpen(true)}
         />
+
+        {resultsOpen && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <h3 className="text-lg font-semibold mb-2">Results (Demo)</h3>
+            <p className="text-sm text-gray-500">This is a demo placeholder. Integrate backend to persist results.</p>
+            <div className="mt-3">
+              <button onClick={() => setResultsOpen(false)} className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50">Close</button>
+            </div>
+          </div>
+        )}
+
+        {timetableOpen && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <h3 className="text-lg font-semibold mb-2">Timetable (Demo)</h3>
+            <p className="text-sm text-gray-500">Upload/preview timetables will be wired to the backend later.</p>
+            <div className="mt-3">
+              <button onClick={() => setTimetableOpen(false)} className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50">Close</button>
+            </div>
+          </div>
+        )}
       </main>
 
-      <ResultsLookupModal dashboard={dashboard} open={resultsOpen} onClose={() => setResultsOpen(false)} />
-      <TimetableWizard dashboard={dashboard} open={timetableOpen} onClose={() => setTimetableOpen(false)} />
-      <EventsModal dashboard={dashboard} open={eventsOpen} onClose={() => setEventsOpen(false)} />
-      <SettingsModal user={user} open={settingsOpen} onClose={() => setSettingsOpen(false)} onUpdate={setUser} />
+      <EventsModal open={eventsOpen} onClose={() => setEventsOpen(false)} role={user.role} events={events} setEvents={setEvents} />
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} user={user} onSave={setUser} />
+      <AttendanceModal
+        open={attendanceOpen}
+        onClose={() => setAttendanceOpen(false)}
+        role={user.role}
+        attendanceMap={attendanceMap}
+        setAttendanceMap={setAttendanceMap}
+      />
     </div>
   );
-}
+};
 
-function Hero({ copy }) {
-  return (
-    <section className="relative">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="size-[720px] bg-indigo-200/40 rounded-full blur-3xl -translate-x-1/3 -translate-y-1/4" />
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
-        <div className="rounded-2xl border border-slate-200 bg-white/70 backdrop-blur p-6 sm:p-8 relative overflow-hidden">
-          <div className="absolute -right-16 -top-16 size-56 rounded-full bg-indigo-100" aria-hidden />
-          <div className="absolute -right-24 top-20 size-24 rounded-full bg-emerald-100" aria-hidden />
-
-          <div className="relative z-10">
-            <p className="text-xs tracking-wider uppercase text-indigo-700 font-semibold">{copy.badge}</p>
-            <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-900">{copy.title}</h2>
-            <p className="mt-2 text-slate-600 max-w-2xl">{copy.desc}</p>
-            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm">{copy.cta}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+export default App;

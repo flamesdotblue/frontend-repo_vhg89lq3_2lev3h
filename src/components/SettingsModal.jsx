@@ -1,76 +1,101 @@
-import { useState, useEffect } from 'react';
-import { X, User, Phone, Lock } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { User, Phone, Mail, Lock } from 'lucide-react';
 
-export default function SettingsModal({ open, onClose, user, onUpdate }) {
+const SettingsModal = ({ open, onClose, user, onSave }) => {
   const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
   const [mobile, setMobile] = useState(user?.mobile || '');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
     setName(user?.name || '');
+    setEmail(user?.email || '');
     setMobile(user?.mobile || '');
-    setPassword('');
-  }, [user, open]);
+  }, [user]);
 
   if (!open) return null;
 
-  const submit = (e) => {
-    e.preventDefault();
-    const payload = { ...user, name: name || user.name, mobile, password: password ? '••••••••' : user.password };
-    onUpdate(payload);
+  const save = () => {
+    onSave({ ...user, name, email, mobile });
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-slate-900/40" onClick={onClose} aria-hidden />
-      <div className="relative z-10 w-full max-w-lg rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-          <div>
-            <h3 className="text-base font-semibold">Settings</h3>
-            <p className="text-xs text-slate-500">Update your profile details.</p>
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/30">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b">
+          <div className="flex items-center gap-2">
+            <User className="text-blue-600" size={20} />
+            <h2 className="text-lg font-semibold">Profile Settings</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-slate-100"><X size={16} /></button>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">✕</button>
         </div>
 
-        <form onSubmit={submit} className="px-5 py-4 space-y-3">
-          <div className="relative">
-            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Full name"
-              className="w-full rounded-lg border border-slate-200 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {user?.role === 'student' && (
-            <div className="relative">
-              <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <div className="p-5 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Full Name</label>
+            <div className="mt-1 flex items-center gap-2">
+              <div className="p-2 rounded-md bg-gray-50 border"><User size={16} className="text-gray-600" /></div>
               <input
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-                placeholder="Mobile number"
-                className="w-full rounded-lg border border-slate-200 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="flex-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Your full name"
               />
             </div>
-          )}
-
-          <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="New password"
-              className="w-full rounded-lg border border-slate-200 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
           </div>
 
-          <button className="w-full py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium">Save changes</button>
-          <p className="text-[11px] text-slate-500">Demo only. Changes are not persisted to a server.</p>
-        </form>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <div className="mt-1 flex items-center gap-2">
+              <div className="p-2 rounded-md bg-gray-50 border"><Mail size={16} className="text-gray-600" /></div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Mobile</label>
+            <div className="mt-1 flex items-center gap-2">
+              <div className="p-2 rounded-md bg-gray-50 border"><Phone size={16} className="text-gray-600" /></div>
+              <input
+                type="tel"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                className="flex-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="1234567890"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <div className="mt-1 flex items-center gap-2">
+              <div className="p-2 rounded-md bg-gray-50 border"><Lock size={16} className="text-gray-600" /></div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="flex-1 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="••••••••"
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Demo-only: password is not persisted.</p>
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2">
+            <button onClick={onClose} className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50">Cancel</button>
+            <button onClick={save} className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Save Changes</button>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default SettingsModal;
